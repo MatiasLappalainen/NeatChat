@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_ENV: development
+      FLASK_APP: __init__.py
+    ports:
+      - '5000:5000'
+    container_name: flask_server
+    volumes:
+      - '.:/code/'
+    entrypoint:
+      - python
+      - app.py
