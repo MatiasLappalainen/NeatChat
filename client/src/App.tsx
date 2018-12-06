@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import io from 'socket.io-client';
-import { Socket } from 'net';
+import Landing from './Views/Landing';
 
 interface Message {
   timestamp: Date;
@@ -35,42 +35,23 @@ class App extends Component {
 
   componentDidMount() {
     socket.on('connect', () => {
-      socket.emit('my event', { data: 'Connected' });
+      console.log('connected');
     });
 
     socket.on('message', (data: Message) => {
       let tempArray = this.state.messages.concat();
       tempArray.push(data);
-      console.log(tempArray);
+
       this.setState({
         messages: tempArray
       });
     });
   }
 
-  sendMessage = (user: string, message: string) => {
-    socket.emit('message', {
-      user: user,
-      message: message,
-      timestamp: new Date()
-    });
-  };
-
   render() {
     return (
       <div className="App">
-        <button onClick={() => this.sendMessage('Matias', 'Hello World')}>
-          Send message
-        </button>
-
-        {this.state.messages.map(el => {
-          return (
-            <>
-              <p>{el.user}</p>
-              <p>{el.message}</p>
-            </>
-          );
-        })}
+        <Landing />
       </div>
     );
   }
