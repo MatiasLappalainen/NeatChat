@@ -6,16 +6,16 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
-@socketio.on('connect')
-def handle_connect():
-    send({'data': 'Connected'})
+@socketio.on('message')
+def messageReceived(json, methods=['GET', 'POST']):
+    emit('message', json)
 
 
-@socketio.on('test-event')
-def test_event(message):
-    send('Got it')
-    print(message)
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=messageReceived)
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host="0.0.0.0")
