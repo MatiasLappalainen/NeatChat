@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import io from 'socket.io-client';
 import Landing from './Views/Landing';
+import Chat from './Views/Chat';
 
 interface Message {
   timestamp: Date;
@@ -18,6 +19,7 @@ interface AppState {
       message: string;
     }
   ];
+  room: string;
 }
 
 var socket = io('http://localhost:5000');
@@ -30,7 +32,8 @@ class App extends Component {
         user: 'Test',
         message: 'Test'
       }
-    ]
+    ],
+    room: ''
   };
 
   componentDidMount() {
@@ -46,12 +49,31 @@ class App extends Component {
         messages: tempArray
       });
     });
+
+    socket.on('room_created', (room: string) => {
+      this.setState({
+        room: room
+      });
+    });
   }
+
+  sendRoom = (room: string) => {
+    socket.emit('create_room', room);
+  };
+
+  handleMessage = (user: string, message: string) => {};
 
   render() {
     return (
       <div className="App">
-        <Landing />
+        <Landing sendRoom={room => this.sendRoom(room)} />
+        {this.state.room && (
+          <Chat
+            sendMessage={(user, message) => this.handleMessage(user, message)}
+            messages={this.state.messages}
+            room={this.state.room}
+          />
+        )}
       </div>
     );
   }

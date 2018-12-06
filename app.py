@@ -6,6 +6,12 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
+@socketio.on('create_room')
+def create_room(room, methods=['POST']):
+    print(room)
+    emit("room_created", room)
+
+
 @socketio.on('message')
 def messageReceived(json, methods=['GET', 'POST']):
     emit('message', json)

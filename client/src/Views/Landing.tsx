@@ -3,11 +3,15 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 
 interface LandingState {
-  room: string;
+  [x: string]: string;
 }
 
-class Landing extends Component {
-  state: LandingState = {
+interface LandingProps {
+  sendRoom: (room: string) => void;
+}
+
+class Landing extends Component<LandingProps, LandingState> {
+  state = {
     room: ''
   };
 
@@ -21,13 +25,15 @@ class Landing extends Component {
     });
   };
 
-  handleClick = () => {
-    console.log('button clicked!');
+  handleClick = (room: string) => {
+    this.props.sendRoom(room);
   };
 
   render() {
     return (
       <div>
+        <h1>Enter chatroom code</h1>
+        <h2>(If you don't have a chatroom ready, enter random code)</h2>
         <Input
           type="text"
           onChange={e => this.handleChange(e)}
@@ -35,7 +41,7 @@ class Landing extends Component {
           name="room"
         />
         <Button
-          onClick={() => this.handleClick()}
+          onClick={() => this.handleClick(this.state.room)}
           color="primary"
           disabled={!this.state.room ? true : false}
         >
