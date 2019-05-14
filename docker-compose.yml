@@ -8,6 +8,8 @@ services:
       FLASK_APP: __init__.py
     ports:
       - '5000:5000'
+    expose:
+      - '5000'
     container_name: flask_server
     volumes:
       - '.:/code/'
